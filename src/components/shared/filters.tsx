@@ -52,6 +52,12 @@ export const Filters: React.FC<FiltersProps> = ({ className }) => {
           { text: "text4", value: "4" },
           { text: "text5", value: "5" },
           { text: "text6", value: "6" },
+          { text: "text1", value: "1" },
+          { text: "text2", value: "2" },
+          { text: "text3", value: "3" },
+          { text: "text4", value: "4" },
+          { text: "text5", value: "5" },
+          { text: "text6", value: "6" },
         ]}
       />
     </div>
