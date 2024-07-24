@@ -13,7 +13,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ className }) => {
   return (
     <header className={cn("border border-b", className)}>
-      <Container className="flex items-center justify-center py-8">
+      <Container className="flex items-center justify-between py-8">
         <div className="flex items-center gap-4">
           <Image src="/logo.png" width={35} height={35} alt="Logo" />
           <div>
