@@ -1,22 +1,42 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Api } from "@/services/api-client";
+import { Product } from "@prisma/client";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
-import { useClickAway } from "react-use";
+import React, { useEffect, useRef, useState } from "react";
+import { useClickAway, useDebounce } from "react-use";
 
 interface SearchInputProps {
   className?: string;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({ className }) => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [isFocus, setIsFocus] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
   const ref = useRef(null);
+
+  useDebounce(
+    () => {
+      Api.products
+        .search(searchQuery)
+        .then((productsData) => setProducts(productsData));
+    },
+    500,
+    [searchQuery]
+  );
 
   useClickAway(ref, () => {
     setIsFocus(false);
   });
+
+  const onClickSearchItem = () => {
+    setIsFocus(false);
+    setProducts([]);
+    setSearchQuery("");
+  };
 
   return (
     <>
@@ -36,22 +56,34 @@ export const SearchInput: React.FC<SearchInputProps> = ({ className }) => {
           type="text"
           placeholder="Search..."
           onFocus={() => setIsFocus(true)}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <div
-          className={cn(
-            "absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30",
-            isFocus && "visible opacity-100 top-12"
-          )}
-        >
-          <Link
-            href="/product/1"
-            className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10"
+        {products.length > 0 && (
+          <div
+            className={cn(
+              "absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30",
+              isFocus && "visible opacity-100 top-12"
+            )}
           >
-            <img className="rounded-sm w-8 h-8" src="/mock.jpg" alt="product" />
-            <span>rfrv</span>
-          </Link>
-        </div>
+            {products.map((product) => (
+              <Link
+                onClick={onClickSearchItem}
+                key={product.id}
+                href={`/product/${product.id}`}
+                className="flex items-center gap-3 px-3 py-2 hover:bg-primary/10"
+              >
+                <img
+                  className="rounded-sm w-8 h-8"
+                  src={product.imageUrl}
+                  alt={product.name}
+                />
+                <span>{product.name}</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
