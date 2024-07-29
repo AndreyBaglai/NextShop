@@ -19,10 +19,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({ className }) => {
   const ref = useRef(null);
 
   useDebounce(
-    () => {
-      Api.products
-        .search(searchQuery)
-        .then((productsData) => setProducts(productsData));
+    async () => {
+      try {
+        const productsData = await Api.products.search(searchQuery);
+        setProducts(productsData);
+      } catch (err) {
+        console.log(err);
+      }
     },
     500,
     [searchQuery]
