@@ -6,15 +6,15 @@ import { useSet } from "react-use";
 type ReturnType = {
   ingredients: Ingredient[];
   loading: boolean;
-  selectedIds: Set<string>;
+  selectedIngredients: Set<string>;
   onAddId: (id: string) => void;
 };
 
-export const useFilterIngredients = (): ReturnType => {
+export const useFilterIngredients = (values: string[] = []): ReturnType => {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const [selectedIds, { toggle }] = useSet(new Set<string>([]));
+  const [selectedIngredients, { toggle }] = useSet(new Set<string>(values));
 
   useEffect(() => {
     async function getIngredients() {
@@ -32,5 +32,5 @@ export const useFilterIngredients = (): ReturnType => {
     getIngredients();
   }, []);
 
-  return { ingredients, loading, onAddId: toggle, selectedIds };
+  return { ingredients, loading, onAddId: toggle, selectedIngredients };
 };
