@@ -5,8 +5,20 @@ import {
   TopBar,
   ProductsGroupList,
 } from "@/components/shared";
+import { prisma } from "../../prisma/prisma-client";
 
-export default function Home() {
+export default async function Home() {
+  const categories = await prisma.category.findMany({
+    include: {
+      products: {
+        include: {
+          variants: true,
+          ingredients: true,
+        },
+      },
+    },
+  });
+
   return (
     <>
       <Container className="mt-10">
@@ -23,117 +35,17 @@ export default function Home() {
 
           <div className="flex-1">
             <div className="flex flex-col gap-16">
-              <ProductsGroupList
-                title="Product 1"
-                categoryId={1}
-                products={[
-                  {
-                    id: 1,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 2,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 3,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 4,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 5,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 6,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 7,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                ]}
-              />
-
-              <ProductsGroupList
-                title="Product 2"
-                categoryId={2}
-                products={[
-                  {
-                    id: 11,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 12,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 13,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 14,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 15,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 16,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                  {
-                    id: 17,
-                    name: "Product name",
-                    imageUrl: "/mock.jpg",
-                    price: 550,
-                    items: [{ price: 550 }],
-                  },
-                ]}
-              />
+              {categories.map(
+                (category: any) =>
+                  category.products.length > 0 && (
+                    <ProductsGroupList
+                      key={category.id}
+                      title={category.name}
+                      categoryId={category.id}
+                      products={category.products}
+                    />
+                  )
+              )}
             </div>
           </div>
         </div>
