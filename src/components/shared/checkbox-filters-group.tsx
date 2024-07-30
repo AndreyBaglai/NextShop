@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import { FilterCheckboxProps } from "./filter-checkbox";
-import { Input } from "../ui";
+import { Input, Skeleton } from "../ui";
 import { FilterCheckbox } from ".";
 
 type Item = FilterCheckboxProps;
@@ -11,12 +11,15 @@ type Item = FilterCheckboxProps;
 interface CheckboxFiltersGroupProps {
   title: string;
   items: Item[];
-  defaultItems: Item[];
+  defaultItems?: Item[];
   limit?: number;
+  loading?: boolean;
   searchInputPlaceholder?: string;
-  onChange?: (value: string[]) => void;
+  onClickCheckbox?: (id: string) => void;
   defaultValue?: string[];
+  selectedValues: Set<string>;
   className?: string;
+  name?: string;
 }
 
 export const CheckboxFiltersGroup: React.FC<CheckboxFiltersGroupProps> = ({
@@ -24,10 +27,13 @@ export const CheckboxFiltersGroup: React.FC<CheckboxFiltersGroupProps> = ({
   items,
   defaultItems,
   limit = 5,
+  loading,
   searchInputPlaceholder = "Search...",
-  onChange,
+  onClickCheckbox,
   defaultValue,
+  selectedValues,
   className,
+  name,
 }) => {
   const [showAll, setShowAll] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -40,7 +46,23 @@ export const CheckboxFiltersGroup: React.FC<CheckboxFiltersGroupProps> = ({
     ? items.filter((item) =>
         item.text.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
       )
-    : defaultItems.slice(0, limit);
+    : (defaultItems || items).slice(0, limit);
+
+  if (loading) {
+    return (
+      <div className={className}>
+        <p className="font-bold mb-3">{title}</p>
+
+        {...Array(limit)
+          .fill(0)
+          .map((_, idx) => (
+            <Skeleton key={idx} className="h-6 mb-4 rounded-[8px]" />
+          ))}
+
+        <Skeleton className="w-28 h-6 mb-4 rounded-[8px]" />
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
@@ -63,8 +85,8 @@ export const CheckboxFiltersGroup: React.FC<CheckboxFiltersGroupProps> = ({
             text={item.text}
             value={item.value}
             endAdornment={item.endAdornment}
-            checked={false}
-            onCheckedChange={() => console.log("checked")}
+            checked={selectedValues.has(item.value)}
+            onCheckedChange={() => onClickCheckbox?.(item.value)}
           />
         ))}
       </div>
