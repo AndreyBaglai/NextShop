@@ -27,6 +27,8 @@ export const ProductsGroupList: React.FC<ProductsGroupListProps> = ({
     threshold: 0.4,
   });
 
+  console.log(products);
+
   useEffect(() => {
     if (intersection?.isIntersecting) {
       setActiveCategoryId(categoryId);
