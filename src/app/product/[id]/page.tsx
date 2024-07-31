@@ -1,6 +1,11 @@
 import { notFound } from "next/navigation";
 import { prisma } from "../../../../prisma/prisma-client";
-import { Container, ProductImage, Title } from "@/components/shared";
+import {
+  Container,
+  ProductImage,
+  ProductVariants,
+  Title,
+} from "@/components/shared";
 
 export default async function Product({
   params: { id },
@@ -29,6 +34,15 @@ export default async function Product({
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga
             pariatur animi, ad quae, dolore labore
           </p>
+
+          <ProductVariants
+            selectedValue="2"
+            items={[
+              { name: "Small", value: "1" },
+              { name: "Medium", value: "2" },
+              { name: "Big", value: "3" },
+            ]}
+          />
         </div>
       </div>
     </Container>
