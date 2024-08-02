@@ -13,6 +13,7 @@ import {
 } from "@/constants/pizza";
 import { useEffect, useState } from "react";
 import { useSet } from "react-use";
+import { calcTotalPizzaPrice } from "@/lib";
 
 interface ChoosePizzaFormProps {
   imageUrl: string;
@@ -41,22 +42,22 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
   );
 
   const textDescription = `${size} cm, ${mapPizzaType[type]} pizza`;
-  const pizzaPrice =
-    variants.find(
-      (variant) => variant.pizzaType === type && variant.size === size
-    )?.price || 0;
-  const ingredientsPrice = ingredients
-    .filter((ingredient) => selectedIngredients.has(ingredient.id))
-    .reduce((acc, ingredient) => acc + ingredient.price, 0);
 
-  const totalPrice = pizzaPrice + ingredientsPrice;
-  const availablePizzas = variants.filter(
+  const totalPrice = calcTotalPizzaPrice(
+    size,
+    type,
+    variants,
+    ingredients,
+    selectedIngredients
+  );
+
+  const filteredPizzasByType = variants.filter(
     (variant) => variant.pizzaType === type
   );
   const availablePizzaSizes = pizzaSizes.map((item) => ({
     name: item.name,
     value: item.value,
-    disabled: !availablePizzas.some(
+    disabled: !filteredPizzasByType.some(
       (pizza) => Number(pizza.size) === Number(item.value)
     ),
   }));
