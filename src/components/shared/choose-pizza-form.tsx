@@ -5,6 +5,7 @@ import { Ingredient, ProductVariant } from "@prisma/client";
 import { IngredientItem, PizzaImage, ProductVariants, Title } from ".";
 import { Button } from "../ui";
 import {
+  mapPizzaType,
   PizzaSize,
   pizzaSizes,
   PizzaType,
@@ -39,8 +40,16 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
     new Set<number>()
   );
 
-  const textDetaills = "30 cm, traditional test 30";
-  const totalPrice = 350;
+  const textDescription = `${size} cm, ${mapPizzaType[type]} pizza`;
+  const pizzaPrice =
+    variants.find(
+      (variant) => variant.pizzaType === type && variant.size === size
+    )?.price || 0;
+  const ingredientsPrice = ingredients
+    .filter((ingredient) => selectedIngredients.has(ingredient.id))
+    .reduce((acc, ingredient) => acc + ingredient.price, 0);
+
+  const totalPrice = pizzaPrice + ingredientsPrice;
 
   return (
     <div className={cn("flex flex-1", className)}>
@@ -49,7 +58,7 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
       <div className="w-[490px] bg-gray-100 p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
 
-        <p className="text-gray-400">{textDetaills}</p>
+        <p className="text-gray-400">{textDescription}</p>
 
         <div className="flex flex-col gap-4 mt-5">
           <ProductVariants
