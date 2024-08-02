@@ -11,7 +11,7 @@ import {
   PizzaType,
   pizzaTypes,
 } from "@/constants/pizza";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSet } from "react-use";
 
 interface ChoosePizzaFormProps {
@@ -50,6 +50,32 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
     .reduce((acc, ingredient) => acc + ingredient.price, 0);
 
   const totalPrice = pizzaPrice + ingredientsPrice;
+  const availablePizzas = variants.filter(
+    (variant) => variant.pizzaType === type
+  );
+  const availablePizzaSizes = pizzaSizes.map((item) => ({
+    name: item.name,
+    value: item.value,
+    disabled: !availablePizzas.some(
+      (pizza) => Number(pizza.size) === Number(item.value)
+    ),
+  }));
+
+  useEffect(() => {
+    const isAvailableSize = availablePizzaSizes?.find(
+      (item) => Number(item.value) === size && !item.disabled
+    );
+    const availableSize = availablePizzaSizes?.find((item) => !item.disabled);
+
+    if (!isAvailableSize && availableSize) {
+      setSize(Number(availableSize.value) as PizzaSize);
+    }
+  }, [type]);
+
+  const onAddCart = () => {
+    // onSubmit?.()
+    console.log({ size, type, ingredients: selectedIngredients });
+  };
 
   return (
     <div className={cn("flex flex-1", className)}>
@@ -62,7 +88,7 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
 
         <div className="flex flex-col gap-4 mt-5">
           <ProductVariants
-            items={pizzaSizes}
+            items={availablePizzaSizes}
             value={String(size)}
             onClick={(value) => setSize(Number(value) as PizzaSize)}
           />
@@ -89,7 +115,10 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
           </div>
         </div>
 
-        <Button className="h-[55px] px-10 text-base w-full rounded-[18px] mt-10">
+        <Button
+          onClick={onAddCart}
+          className="h-[55px] px-10 text-base w-full rounded-[18px] mt-10"
+        >
           Add to cart {totalPrice} $
         </Button>
       </div>
