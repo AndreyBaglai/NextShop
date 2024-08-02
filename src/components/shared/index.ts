@@ -13,4 +13,5 @@ export { ProductsGroupList } from "./products-group-list";
 export { SearchInput } from "./search-input";
 export { ProductImage } from "./product-image";
 export { ProductVariants } from "./product-variants";
+export { ChooseProductForm } from "./choose-product-form";
 export * from "./modals";

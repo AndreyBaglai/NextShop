@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Product } from "@prisma/client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Title } from "..";
+import { ChooseProductForm } from "..";
 
 interface ChooseProductModalProps {
   product: Product;
@@ -25,7 +25,12 @@ export const ChooseProductModal: React.FC<
           className
         )}
       >
-        <Title text={product.name} />
+        <ChooseProductForm
+          imageUrl={product.imageUrl}
+          name={product.name}
+          ingredients={[]}
+          variants={[]}
+        />
       </DialogContent>
     </Dialog>
   );
