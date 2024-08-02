@@ -1,13 +1,10 @@
 import { cn } from "@/lib/utils";
-import { Ingredient, ProductVariant } from "@prisma/client";
-import { ProductImage, Title } from ".";
+import { Title } from ".";
 import { Button } from "../ui";
 
 interface ChooseProductFormProps {
   imageUrl: string;
   name: string;
-  ingredients: Ingredient[];
-  variants: ProductVariant[];
   loading?: boolean;
   onSubmit?: (itemId: number, ingredients: number[]) => void;
   className?: string;
@@ -15,16 +12,13 @@ interface ChooseProductFormProps {
 
 export const ChooseProductForm: React.FC<ChooseProductFormProps> = ({
   name,
-  variants,
   imageUrl,
-  ingredients,
   loading,
   onSubmit,
   className,
 }) => {
   return (
     <div className={cn("flex flex-1", className)}>
-      {/* <ProductImage src={imageUrl} size={30} /> */}
       <div className="flex items-center justify-center flex-1 relative w-full">
         <img
           src={imageUrl}

@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 
-interface ProductImageProps {
+interface PizzaImageProps {
   src: string;
   className?: string;
   size: 20 | 30 | 40;
 }
 
-export const ProductImage: React.FC<ProductImageProps> = ({
+export const PizzaImage: React.FC<PizzaImageProps> = ({
   src,
   className,
   size,
