@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import React, { PropsWithChildren } from "react";
 
@@ -13,6 +15,8 @@ import {
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import { CartDrawerItem } from ".";
+import { getCartItemDetails } from "@/lib";
 
 interface CartDrawerProps {
   className?: string;
@@ -31,6 +35,65 @@ export const CartDrawer: React.FC<PropsWithChildren<CartDrawerProps>> = ({
             In the cart <span className="font-bold">3 items</span>
           </SheetTitle>
         </SheetHeader>
+
+        <div className="-mx-6 mt-5 overflow-auto flex-1">
+          <div className="mb-2">
+            <CartDrawerItem
+              id={1}
+              imageUrl="/mock.jpg"
+              details={getCartItemDetails(
+                [{ name: "dcddd" }, { name: "ddcd33333333333333dc" }],
+                1,
+                30
+              )}
+              name={"title"}
+              price={410}
+              quantity={2}
+            />
+          </div>
+          <div className="mb-2">
+            <CartDrawerItem
+              id={1}
+              imageUrl="/mock.jpg"
+              details={getCartItemDetails(
+                [{ name: "dcddd" }, { name: "ddcd33333333333333dc" }],
+                1,
+                30
+              )}
+              name={"title"}
+              price={410}
+              quantity={2}
+            />
+          </div>
+          <div className="mb-2">
+            <CartDrawerItem
+              id={1}
+              imageUrl="/mock.jpg"
+              details={getCartItemDetails(
+                [{ name: "dcddd" }, { name: "ddcd33333333333333dc" }],
+                1,
+                30
+              )}
+              name={"title"}
+              price={410}
+              quantity={2}
+            />
+          </div>
+          <div className="mb-2">
+            <CartDrawerItem
+              id={1}
+              imageUrl="/mock.jpg"
+              details={getCartItemDetails(
+                [{ name: "dcddd" }, { name: "ddcd33333333333333dc" }],
+                1,
+                30
+              )}
+              name={"title"}
+              price={410}
+              quantity={2}
+            />
+          </div>
+        </div>
 
         <SheetFooter className="-mx-6 bg-white p-8">
           <div className="w-full">
