@@ -4,16 +4,9 @@ import { cn } from "@/lib/utils";
 import { Ingredient, ProductVariant } from "@prisma/client";
 import { IngredientItem, PizzaImage, ProductVariants, Title } from ".";
 import { Button } from "../ui";
-import {
-  mapPizzaType,
-  PizzaSize,
-  pizzaSizes,
-  PizzaType,
-  pizzaTypes,
-} from "@/constants/pizza";
-import { useEffect, useState } from "react";
-import { useSet } from "react-use";
-import { calcTotalPizzaPrice } from "@/lib";
+import { PizzaSize, PizzaType, pizzaTypes } from "@/constants/pizza";
+import { getPizzaDetails } from "@/lib";
+import { usePizzaOptions } from "@/hooks";
 
 interface ChoosePizzaFormProps {
   imageUrl: string;
@@ -34,44 +27,23 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
   onSubmit,
   className,
 }) => {
-  const [size, setSize] = useState<PizzaSize>(20);
-  const [type, setType] = useState<PizzaType>(1);
+  const {
+    type,
+    size,
+    selectedIngredients,
+    availableSizes,
+    setSize,
+    setType,
+    addIngredient,
+  } = usePizzaOptions(variants);
 
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(
-    new Set<number>()
-  );
-
-  const textDescription = `${size} cm, ${mapPizzaType[type]} pizza`;
-
-  const totalPrice = calcTotalPizzaPrice(
+  const { textDescription, totalPrice } = getPizzaDetails(
     size,
     type,
     variants,
     ingredients,
     selectedIngredients
   );
-
-  const filteredPizzasByType = variants.filter(
-    (variant) => variant.pizzaType === type
-  );
-  const availablePizzaSizes = pizzaSizes.map((item) => ({
-    name: item.name,
-    value: item.value,
-    disabled: !filteredPizzasByType.some(
-      (pizza) => Number(pizza.size) === Number(item.value)
-    ),
-  }));
-
-  useEffect(() => {
-    const isAvailableSize = availablePizzaSizes?.find(
-      (item) => Number(item.value) === size && !item.disabled
-    );
-    const availableSize = availablePizzaSizes?.find((item) => !item.disabled);
-
-    if (!isAvailableSize && availableSize) {
-      setSize(Number(availableSize.value) as PizzaSize);
-    }
-  }, [type]);
 
   const onAddCart = () => {
     // onSubmit?.()
@@ -89,7 +61,7 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
 
         <div className="flex flex-col gap-4 mt-5">
           <ProductVariants
-            items={availablePizzaSizes}
+            items={availableSizes}
             value={String(size)}
             onClick={(value) => setSize(Number(value) as PizzaSize)}
           />
