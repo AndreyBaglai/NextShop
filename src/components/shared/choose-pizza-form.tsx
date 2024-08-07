@@ -14,7 +14,7 @@ interface ChoosePizzaFormProps {
   ingredients: Ingredient[];
   variants: ProductVariant[];
   loading?: boolean;
-  onSubmit?: (itemId: number, ingredients: number[]) => void;
+  onSubmit: (varianId: number, ingredients: number[]) => void;
   className?: string;
 }
 
@@ -32,6 +32,7 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
     size,
     selectedIngredients,
     availableSizes,
+    currentVariantId,
     setSize,
     setType,
     addIngredient,
@@ -46,8 +47,9 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
   );
 
   const onAddCart = () => {
-    // onSubmit?.()
-    console.log({ size, type, ingredients: selectedIngredients });
+    if (currentVariantId) {
+      onSubmit(currentVariantId, Array.from(selectedIngredients));
+    }
   };
 
   return (

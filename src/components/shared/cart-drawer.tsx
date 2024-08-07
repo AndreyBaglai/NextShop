@@ -66,10 +66,9 @@ export const CartDrawer: React.FC<PropsWithChildren<CartDrawerProps>> = ({
         </SheetHeader>
 
         <div className="-mx-6 mt-5 overflow-auto flex-1">
-          <div className="mb-2">
-            {items.map((item) => (
+          {items.map((item) => (
+            <div className="mb-2" key={item.id}>
               <CartDrawerItem
-                key={item.id}
                 id={item.id}
                 imageUrl={item.imageUrl}
                 details={getCartItemDetails(
@@ -84,9 +83,9 @@ export const CartDrawer: React.FC<PropsWithChildren<CartDrawerProps>> = ({
                   onClickCountButton(item.id, item.quantity, type)
                 }
                 onClickRemove={() => removeCartItem(item.id)}
-              />
-            ))}
-          </div>
+              />{" "}
+            </div>
+          ))}
         </div>
 
         <SheetFooter className="-mx-6 bg-white p-8">
