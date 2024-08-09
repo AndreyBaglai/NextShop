@@ -6,7 +6,8 @@ interface ChooseProductFormProps {
   imageUrl: string;
   name: string;
   loading?: boolean;
-  onSubmit?: (itemId: number, ingredients: number[]) => void;
+  onSubmit?: () => void;
+  price: number;
   className?: string;
 }
 
@@ -16,6 +17,7 @@ export const ChooseProductForm: React.FC<ChooseProductFormProps> = ({
   loading,
   onSubmit,
   className,
+  price,
 }) => {
   return (
     <div className={cn("flex flex-1", className)}>
@@ -30,13 +32,12 @@ export const ChooseProductForm: React.FC<ChooseProductFormProps> = ({
       <div className="w-[490px] bg-gray-100 p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
 
-        <p className="text-gray-400">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolorum
-          provident, explicabo ipsum assumenda pariatur
-        </p>
-
-        <Button className="h-[55px] px-10 text-base w-full rounded-[18px] mt-10">
-          Add to cart {350}
+        <Button
+          loading={loading}
+          onClick={() => onSubmit?.()}
+          className="h-[55px] px-10 text-base w-full rounded-[18px] mt-10"
+        >
+          Add to cart {price}
         </Button>
       </div>
     </div>
