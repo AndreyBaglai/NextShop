@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ChoosePizzaForm, ChooseProductForm } from "..";
 import { ProductData } from "@/@types/product";
 import { useCartStore } from "@/store/cart";
+import toast from "react-hot-toast";
 
 interface ChooseProductModalProps {
   product: ProductData;
@@ -19,13 +20,25 @@ export const ChooseProductModal: React.FC<
   const router = useRouter();
   const firstItem = product.variants[0];
   const isPizzaForm = Boolean(firstItem.pizzaType);
-  const addCartItem = useCartStore((state) => state.addCartItem);
+  const [addCartItem, loading] = useCartStore((state) => [
+    state.addCartItem,
+    state.loading,
+  ]);
 
-  const onAddProduct = () => {
-    addCartItem({ productVariantId: firstItem.id });
-  };
-  const onAddPizza = (productVariantId: number, ingredients: number[]) => {
-    addCartItem({ productVariantId, ingredients });
+  const onSubmit = async (
+    productVariantId?: number,
+    ingredients?: number[]
+  ) => {
+    try {
+      const variantId = productVariantId ?? firstItem.id;
+
+      await addCartItem({ productVariantId: variantId, ingredients });
+      toast.success(`${product.name} added in the cart`);
+      router.back();
+    } catch (error) {
+      toast.error("Can't add product in the cart");
+      console.error(error);
+    }
   };
 
   return (
@@ -38,17 +51,19 @@ export const ChooseProductModal: React.FC<
       >
         {isPizzaForm ? (
           <ChoosePizzaForm
+            loading={loading}
             imageUrl={product.imageUrl}
             name={product.name}
             variants={product.variants}
             ingredients={product.ingredients}
-            onSubmit={onAddPizza}
+            onSubmit={onSubmit}
           />
         ) : (
           <ChooseProductForm
+            loading={loading}
             imageUrl={product.imageUrl}
             name={product.name}
-            onSubmit={onAddProduct}
+            onSubmit={onSubmit}
             price={firstItem.price}
           />
         )}

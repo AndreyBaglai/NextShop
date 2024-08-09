@@ -33,7 +33,8 @@ export const ChooseProductForm: React.FC<ChooseProductFormProps> = ({
         <Title text={name} size="md" className="font-extrabold mb-1" />
 
         <Button
-          onClick={onSubmit}
+          loading={loading}
+          onClick={() => onSubmit?.()}
           className="h-[55px] px-10 text-base w-full rounded-[18px] mt-10"
         >
           Add to cart {price}

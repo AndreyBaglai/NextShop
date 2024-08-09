@@ -91,6 +91,7 @@ export const ChoosePizzaForm: React.FC<ChoosePizzaFormProps> = ({
         </div>
 
         <Button
+          loading={loading}
           onClick={onAddCart}
           className="h-[55px] px-10 text-base w-full rounded-[18px] mt-10"
         >
