@@ -44,7 +44,7 @@ export const CartDrawer: React.FC<PropsWithChildren<CartDrawerProps>> = ({
 
   useEffect(() => {
     fetchCartItems();
-  }, []);
+  }, [fetchCartItems]);
 
   const onClickCountButton = (
     id: number,
@@ -83,7 +83,7 @@ export const CartDrawer: React.FC<PropsWithChildren<CartDrawerProps>> = ({
                   onClickCountButton(item.id, item.quantity, type)
                 }
                 onClickRemove={() => removeCartItem(item.id)}
-              />{" "}
+              />
             </div>
           ))}
         </div>
